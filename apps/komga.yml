@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Title:      PGBlitz (Reference Title File)
+# Title:      PlexGuide (Reference Title File)
 # Author(s):  Admin9705
-# URL:        https://pgblitz.com - http://github.pgblitz.com
+# URL:        https://plexguide.com - http://github.plexguide.com
 # GNU:        General Public License v3.0
 ################################################################################
 ---
@@ -12,35 +12,36 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'bitwarden'
-        intport: '80'
-        extport: '2489'
-        image: 'bitwardenrs/server'
+        pgrole: 'komga'
+        intport: '8080'
+        extport: '8481'
+        image: 'gotson/komga'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: '/opt/communityapps/apps/_core.yml'
+      include_tasks: '/opt/plexguide/containers/_core.yml'
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
+          traefik.frontend.auth.forward.address: '{{gauth}}'
           traefik.enable: 'true'
-          traefik.backend: '{{pgrole}}'
-          traefik.port: '80'
-          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
+          traefik.port: '{{intport}}'
+          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}},{{tldset}}'
 
     - name: 'Setting PG Volumes'
       set_fact:
         pg_volumes:
-          - '/opt/appdata/{{pgrole}}/data:/data'
-          - '/opt/appdata/{{pgrole}}/database:/database'
+          - '/opt/appdata/{{pgrole}}:/config'
+          - '/mnt/unionfs/comics:/books'
+          - '/etc/localtime:/etc/localtime:ro'
 
     - name: 'Setting PG ENV'
       set_fact:
         pg_env:
-          PUID: '1000'
-          PGID: '1000'
+          PUID: 1000
+          PGID: 1000
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -48,6 +49,8 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: yes
+        published_ports:
+          - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'
         env: '{{pg_env}}'
         restart_policy: unless-stopped
