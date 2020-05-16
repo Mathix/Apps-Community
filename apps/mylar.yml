@@ -12,10 +12,10 @@
     # FACTS #######################################################################
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'komga'
+        pgrole: 'mylar'
         intport: '8090'
         extport: '8090'
-        image: 'gotson/komga'
+        image: 'mathix9/mylar'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
