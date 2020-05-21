@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Title:      Traktor docker container - track you Plex TV-Show progress
+# Title:      TTRSS
 # Author(s):  h1f0x
 # URL:        https://github.com/h1f0x/docker-trackt-plex-tracker
 # GNU:        General Public License v3.0
@@ -13,10 +13,10 @@
 
     - name: 'Set Known Facts'
       set_fact:
-        pgrole: 'traktor'
-        intport: '80'
+        pgrole: 'ttrss'
+        intport: '181'
         extport: '5892'
-        image: 'h1f0x/docker-traktor'
+        image: 'wangqiru/ttrss'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
@@ -46,8 +46,7 @@
           - '/etc/localtime:/etc/localtime:ro'
           - '{{path.stdout}}:{{path.stdout}}'
           - '/mnt:/mnt'
-          - '/opt/appdata/{{pgrole}}:/config'
-          - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Plug-in Support/Databases:/plex:ro'
+          - '/opt/appdata/{{pgrole}}:/var/wwww'
 
     - name: 'Setting PG ENV'
       set_fact:
