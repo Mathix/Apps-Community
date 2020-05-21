@@ -43,7 +43,7 @@
       set_fact:
         pg_volumes:
           - '/opt/appdata/{{pgrole}}:/config'
-          - '{{path.stdout}}:{{path.stdout}}'
+          - '/mnt/unionfs/comics:/comics'
           - '/etc/localtime:/etc/localtime:ro'
           - '/mnt:/mnt'
 
