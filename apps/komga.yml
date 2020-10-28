@@ -34,7 +34,7 @@
       set_fact:
         pg_volumes:
           - '/opt/appdata/{{pgrole}}:/config'
-          - '/home/comics:/books'
+          - '/home/comics:/comics'
           - '/etc/localtime:/etc/localtime:ro'
 
     - name: 'Setting PG ENV'
